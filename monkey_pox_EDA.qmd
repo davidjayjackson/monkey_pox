@@ -1,0 +1,64 @@
+---
+title: "Monkey Pox Analysis"
+format: html
+editor: visual
+---
+
+#Monkey Pox Analysis (WHO/Our World In Data)
+
+```{r}
+rm(list=ls())
+library(tidyverse)
+library(janitor)
+library(scales)
+```
+
+# Load and Summarize Data
+
+```{r}
+monkey <- read_csv("./monkeypox.csv") |> select(location,iso_code,date,total_cases,total_deaths,
+                          new_cases,new_deaths,new_cases_smoothed,
+                          new_deaths_smoothed) |> mutate(yr = lubridate::year(date))
+
+```
+
+# Total and Daily Cases Worldwide by Date
+
+```{r}
+world <- monkey |> filter(location =="World")
+summary(world$total_cases)
+```
+```{r}
+summary(world$new_cases)
+```
+```{r}
+world |> ggplot() + geom_line(aes(x=date,y=total_cases)) +
+  labs(title="Total Monkey Pox Cases Worldwide")
+```
+```{r}
+world |> ggplot() + geom_line(aes(x=date,y=new_cases)) +
+  facet_wrap(~yr)
+
+```
+
+# Total and Daily Deaths Worldwide by Date
+
+```{r}
+world |> ggplot() + geom_line(aes(x=date,y=total_deaths)) +
+ 
+  # geom_smooth(aes(x=date,y=new_deaths),method=loess) +
+  labs(title="Total Monkey Pox Deaths Worldwide")
+
+```
+```{r}
+world |> ggplot() + geom_line(aes(x=date,y=new_deaths)) +
+  facet_wrap(~yr)
+
+```
+
+# Extract Numbers for Continent Numbers 
+
+```{r}
+continents <- monkey |> filter(is.na(iso_code)& location != "World")
+```
+```{r}
