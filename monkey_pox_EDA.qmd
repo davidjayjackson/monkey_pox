@@ -28,37 +28,59 @@ monkey <- read_csv("./monkeypox.csv") |> select(location,iso_code,date,total_cas
 world <- monkey |> filter(location =="World")
 summary(world$total_cases)
 ```
+
 ```{r}
 summary(world$new_cases)
 ```
+
 ```{r}
-world |> ggplot() + geom_line(aes(x=date,y=total_cases)) +
-  labs(title="Total Monkey Pox Cases Worldwide")
+world |> ggplot() + geom_point(aes(x=date,y=total_cases,col=total_cases)) +
+  labs(title="Total Monkey Pox Cases Worldwide") +
+   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+
 ```{r}
 world |> ggplot() + geom_line(aes(x=date,y=new_cases)) +
-  facet_wrap(~yr)
-
+  facet_wrap(~yr ,scales="free_y") +  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 # Total and Daily Deaths Worldwide by Date
 
 ```{r}
 world |> ggplot() + geom_line(aes(x=date,y=total_deaths)) +
- 
-  # geom_smooth(aes(x=date,y=new_deaths),method=loess) +
-  labs(title="Total Monkey Pox Deaths Worldwide")
+
+  labs(title="Total Monkey Pox Deaths Worldwide") +
+   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ```
+
 ```{r}
 world |> ggplot() + geom_line(aes(x=date,y=new_deaths)) +
-  facet_wrap(~yr)
+  facet_wrap(~yr,scales="free_y") +  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ```
 
-# Extract Numbers for Continent Numbers 
+# Extract Total And Daily Cases by Continent
 
 ```{r}
 continents <- monkey |> filter(is.na(iso_code)& location != "World")
 ```
 ```{r}
+continents |> count(location,sort=TRUE) |>
+  ggplot() + geom_col(aes(x = reorder(location, n), y = n, fill = location)) + 
+  coord_flip() + 
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
+  labs(title="Count of Dates Reported by Continent",y="Dates Reported")
+```
+```{r}
+continents |> ggplot() + 
+  geom_line(aes(x=date,y=total_cases,col=location),linewidth=2) +
+  labs(title="Total Monkey Pox Cases by Continent")
+```
+```{r}
+continents |> ggplot() + 
+  geom_line(aes(x=date,y=new_cases,col=location),linewidth=2) +
+  labs(title="Daily Monkey Pox Cases by Continent")
+```
+
+# Total And Daily Deaths by Continent
