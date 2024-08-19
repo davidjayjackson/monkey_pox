@@ -4,7 +4,7 @@ format: html
 editor: visual
 ---
 
-#Monkey Pox Analysis (WHO/Our World In Data)
+# Monkey Pox Analysis (WHO/Our World In Data)
 
 ```{r}
 rm(list=ls())
@@ -40,7 +40,7 @@ world |> ggplot() + geom_point(aes(x=date,y=total_cases,col=total_cases)) +
 ```
 
 ```{r}
-world |> ggplot() + geom_line(aes(x=date,y=new_cases)) +
+world |> ggplot() + geom_line(aes(x=date,y=new_cases,fill=location)) +
   facet_wrap(~yr ,scales="free_y") +  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
@@ -84,3 +84,26 @@ continents |> ggplot() +
 ```
 
 # Total And Daily Deaths by Continent
+
+```{r}
+continents |> ggplot() + 
+  geom_line(aes(x=date,y=total_deaths,col=location),linewidth=2) +
+  labs(title="Total Monkey Pox Deaths by Continent")
+
+continents |> ggplot() + 
+  geom_line(aes(x=date,y=new_deaths,col=location),linewidth=2) +
+  labs(title="Daily Monkey Pox Deaths by Continent")
+```
+
+```{r}
+continents |> ggplot() + 
+  geom_line(aes(x=date,y=total_deaths,col=location),linewidth=2) +
+  labs(title="Total Monkey Pox Deaths by Continent") +
+  facet_wrap(~location)
+
+continents |> ggplot() + 
+  geom_line(aes(x=date,y=new_deaths,col=location),linewidth=2) +
+  labs(title="Daily Monkey Pox Deaths by Continent") +
+  facet_wrap(~location)
+```
+```
