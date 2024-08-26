@@ -41,7 +41,8 @@ world |> ggplot() + geom_point(aes(x=date,y=total_cases,col=total_cases)) +
 
 ```{r}
 world |> ggplot() + geom_line(aes(x=date,y=new_cases,fill=location)) +
-  facet_wrap(~yr ,scales="free_y") +  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  facet_wrap(~yr ,scales="free_y",ncol=1 )+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title="New Cases By Day (as of 2024-08-25)")
 ```
 
 # Total and Daily Deaths Worldwide by Date
@@ -56,7 +57,8 @@ world |> ggplot() + geom_line(aes(x=date,y=total_deaths)) +
 
 ```{r}
 world |> ggplot() + geom_line(aes(x=date,y=new_deaths)) +
-  facet_wrap(~yr,scales="free_y") +  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  facet_wrap(~yr,scales="free_y",ncol=1) +  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title="New Deaths By Day (as of 2024-08-25)")
 
 ```
 
@@ -65,6 +67,7 @@ world |> ggplot() + geom_line(aes(x=date,y=new_deaths)) +
 ```{r}
 continents <- monkey |> filter(is.na(iso_code)& location != "World")
 ```
+
 ```{r}
 continents |> count(location,sort=TRUE) |>
   ggplot() + geom_col(aes(x = reorder(location, n), y = n, fill = location)) + 
@@ -72,11 +75,13 @@ continents |> count(location,sort=TRUE) |>
   theme(axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
   labs(title="Count of Dates Reported by Continent",y="Dates Reported")
 ```
+
 ```{r}
 continents |> ggplot() + 
   geom_line(aes(x=date,y=total_cases,col=location),linewidth=2) +
   labs(title="Total Monkey Pox Cases by Continent")
 ```
+
 ```{r}
 continents |> ggplot() + 
   geom_line(aes(x=date,y=new_cases,col=location),linewidth=2) +
@@ -106,4 +111,9 @@ continents |> ggplot() +
   labs(title="Daily Monkey Pox Deaths by Continent") +
   facet_wrap(~location)
 ```
+
+# Top Five Countries by Total Cases or Deaths
+
+```{r}
+countries <- monkey |> filter(!is.na(iso_code))
 ```
