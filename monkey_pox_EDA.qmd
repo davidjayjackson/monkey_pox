@@ -62,6 +62,29 @@ world |> ggplot() + geom_line(aes(x=date,y=new_deaths)) +
 
 ```
 
+# Running totals by Year and Date
+
+```{r}
+
+running_total <- world %>%
+  group_by(yr) %>%
+  arrange(date) %>%  # Ensure data is sorted by date within each year
+  mutate(
+    running_cases = cumsum(new_cases),
+    running_deaths = cumsum(new_deaths)
+  ) %>%
+  ungroup()
+
+running_total$yr <- as.factor(running_total$yr)
+```
+```{r}
+running_total |> ggplot() + geom_area(aes(x=date,y=running_cases,col=yr,fill=yr),linewidth=2) +
+  labs(title="Cumulative Total New Cases by Year/Date")
+
+running_total |> ggplot() + geom_area(aes(x=date,y=running_deaths,col=yr,fill=yr),linewidth=2) +
+  labs(title="Cumulative Total New Deaths by Year/Date")
+```
+
 # Extract Total And Daily Cases by Continent
 
 ```{r}
@@ -116,4 +139,5 @@ continents |> ggplot() +
 
 ```{r}
 countries <- monkey |> filter(!is.na(iso_code))
+top_five <- countries |> filter(date =='2024-08-25')
 ```
